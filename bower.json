@@ -1,0 +1,22 @@
+{
+  "name": "pupinizacija-stars",
+  "version": "0.0.0",
+  "homepage": "https://github.com/arodic/pupinizacija-stars",
+  "authors": [
+    "Aki Rodic <aleksandar.xyz@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "three-renderer": "arodic/three-renderer#master"
+  },
+  "resolutions": {
+    "three-renderer": "master"
+  }
+}

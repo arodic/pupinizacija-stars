@@ -1,0 +1,184 @@
+<script src="../scripts/cyrlatconverter-v0.6.1.js"></script>
+
+<dom-module id="app-voice">
+  <template>
+    <voice-recognition id="webspeech"
+        on-result="onResult"
+        on-end="onEnd"
+        on-start="onStart"
+        on-error="onError">
+    </voice-recognition>
+  </template>
+</dom-module>
+<script>
+(function (THREE) {
+
+  var upitnereci = ['kako', 'gde', 'zašto', 'kada', 'koliko', 'ko je', 'ko su'];
+  var running = false;
+  var result;
+  var sum, level, j;
+
+  window.AudioContext = window.AudioContext ||
+                        window.webkitAudioContext;
+  navigator.getUserMedia = navigator.getUserMedia ||
+                           navigator.webkitGetUserMedia
+
+  var context = new AudioContext();
+  var analyser, voice, stream, microphone, source;
+  var binCount, levelBins;
+
+  var windowSize = 512;
+  var freqByteData = new Uint8Array(windowSize);
+  var timeByteData = new Uint8Array(windowSize);
+
+  var levelHistoryData = new Uint8Array(windowSize);
+  var levelHistoryTexture = new THREE.DataTexture( levelHistoryData, windowSize, 1, THREE.LuminanceFormat, THREE.UnsignedByteType )
+  levelHistoryTexture.wrapS = THREE.RepeatWrapping;
+  levelHistoryTexture.wrapT = THREE.RepeatWrapping;
+  levelHistoryTexture.anisotropy = 6;
+  levelHistoryTexture.needsUpdate = true;
+  levelHistoryTexture.generateMipmaps = true;
+
+  var waveHistoryData = new Float32Array(windowSize);
+  var waveHistoryTexture = new THREE.DataTexture( waveHistoryData, windowSize, 1, THREE.LuminanceFormat, THREE.FloatType )
+  waveHistoryTexture.wrapS = THREE.RepeatWrapping;
+  waveHistoryTexture.wrapT = THREE.RepeatWrapping;
+  waveHistoryTexture.needsUpdate = true;
+  waveHistoryTexture.generateMipmaps = true;
+
+  var w_samp = 512; // 8
+  var w_step = windowSize / w_samp; // 128
+
+
+  Polymer({
+    is: 'app-voice',
+    properties: {
+      result: {
+        type: String,
+        notify: true
+      },
+      levelHistoryTexture: {
+        type: THREE.DataTexture,
+        value: levelHistoryTexture
+      },
+      waveHistoryTexture: {
+        type: THREE.DataTexture,
+        value: waveHistoryTexture
+      }
+    },
+    update: function () {
+      if (analyser) {
+        analyser.getByteFrequencyData(freqByteData);
+        analyser.getByteTimeDomainData(timeByteData);
+
+        // GET AVG LEVEL
+    		sum = 0;
+    		level = 0;
+    		for(j = 0; j < windowSize; j++) {
+    			sum += freqByteData[j];
+    		}
+    		level = sum / windowSize;
+
+
+        for(j = windowSize; j > 0; j--) {
+          levelHistoryData[j] = levelHistoryData[j - 1];
+    		}
+        levelHistoryData[0] = level;
+        this.levelHistoryTexture.needsUpdate = true;
+
+        for(j = windowSize; j > 0; j = j - w_step) {
+          for(i = 0; i < w_step; i++) {
+            waveHistoryData[j - i] = waveHistoryData[j - i - w_step];
+          }
+        }
+
+        if (running) {
+
+          for(i = 0; i < w_step; i++) {
+            waveHistoryData[i] = timeByteData[i * w_samp] / 128 - 1;
+          }
+          // noise gate
+          for(i = 0; i < w_step; i++) {
+            if (Math.abs(waveHistoryData[i]) < 0.01) {
+
+              if(Math.abs(waveHistoryData[i + 1]) < 0.01 &&
+                    Math.abs(waveHistoryData[i + 2]) < 0.01 &&
+                    Math.abs(waveHistoryData[i + 3]) < 0.01 &&
+                    Math.abs(waveHistoryData[i + 4]) < 0.01) {
+                waveHistoryData[i] = 0;
+              }
+            }
+          }
+
+        }
+
+        this.waveHistoryTexture.needsUpdate = true;
+      }
+    },
+    ready: function () {
+
+      var scope = this;
+
+      voice = this.$.webspeech;
+
+      this.result = replaceL2C('Podigni slušalicu!');
+
+      navigator.getUserMedia({audio: true}, function(str) {
+        stream = str;
+        microphone = context.createMediaStreamSource(str);
+        source = context.createBufferSource();
+      	analyser = context.createAnalyser();
+      	analyser.fftSize = windowSize;
+      	analyser.smoothingTimeConstant = 0.1;
+      	microphone.connect(analyser);
+      }, function () {
+        scope.result = replaceL2C('Greška u aktivaciji mikrofona!');
+      });
+
+      var startSpeech = function() {
+        if (running) {
+          return;
+        }
+        voice.recognition.lang = 'sr';
+        voice.start();
+      };
+
+      var endSpeech = function() {
+        voice.stop();
+      };
+
+      document.addEventListener('mousedown', startSpeech);
+      document.addEventListener('mouseup', endSpeech);
+    },
+    onResult: function () {
+      result = event.detail.result;
+      var reci = result.split(' ');
+      if (reci[1] === 'li') {
+        result += '?';
+      } else {
+        for (var i = 0; i < upitnereci.length; i++) {
+          if (result.search(upitnereci[i]) === 0) {
+            result += '?';
+          }
+        }
+      }
+      this.result = replaceL2C(result);
+      this.$.webspeech.text = '';
+    },
+    onEnd: function () {
+      this.result = 'stop';
+      voice.stop();
+      running = false;
+    },
+    onStart: function () {
+      this.result = 'start';
+      running = true;
+    },
+    onError: function () {
+      this.result = replaceL2C('Greška u slušanju.');
+      voice.stop();
+      running = false;
+    }
+  });
+}(THREE));
+</script>
