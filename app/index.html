@@ -37,26 +37,15 @@
   <!-- will be replaced with elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html">
   <!-- endreplace-->
+
+  <script src="lib/cyrlatconverter-v0.6.1.js"></script>
+  <script src="lib/droid_sans_regular.typeface.js"></script>
+
 </head>
 
 <body unresolved class="fullbleed layout vertical">
   <span id="browser-sync-binding"></span>
-
-  <template is="dom-bind" id="app">
-    <three-renderer id="renderer"
-        width="{{width}}"
-        height="{{height}}"
-        clear-color="black">
-    </three-renderer>
-    <app-voice id="voice"
-        on-result-changed="onResultChanged"></app-voice>
-    <app-animation id="animation"
-        on-animation-frame-changed="onAnimationChanged"></app-animation>
-  </template>
-
-  <!-- build:js scripts/app.js -->
-  <script src="scripts/app.js"></script>
-  <!-- endbuild-->
+  <main-app></main-app>
 </body>
 
 </html>
