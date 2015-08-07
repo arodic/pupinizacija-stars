@@ -100,6 +100,9 @@ gulp.task('copy', function () {
   var elements = gulp.src(['app/elements/**/*.html'])
     .pipe(gulp.dest('dist/elements'));
 
+  var model = gulp.src(['app/model/**/*.bin'])
+    .pipe(gulp.dest('dist/model'));
+
   var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
     .pipe(gulp.dest('dist/elements/bootstrap'));
 
