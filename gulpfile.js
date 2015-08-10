@@ -94,6 +94,9 @@ gulp.task('copy', function () {
     'bower_components/**/*'
   ]).pipe(gulp.dest('dist/bower_components'));
 
+  var audio = gulp.src(['app/audio/**/*'])
+    .pipe(gulp.dest('dist/audio'));
+
   var lib = gulp.src(['app/lib/**/*.js'])
     .pipe(gulp.dest('dist/lib'));
 
