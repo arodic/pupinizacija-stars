@@ -1,0 +1,29 @@
+newmtl lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Pupin_Star_DIFF.jpg
+Ni 1.00
+newmtl lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd StarMoustache_DIFF.jpg
+Ni 1.00
+newmtl pasted__pasted___GlassesSG
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 0.16 0.16 0.16
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 4.31
+newmtl pasted__pasted__glassesHold_s_MATSG
+illum 4
+Kd 0.03 0.03 0.03
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.67 0.67 0.67

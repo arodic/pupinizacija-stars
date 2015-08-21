@@ -15103,7 +15103,7 @@ paper-ripple {
 
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'arraybuffer';
-  xhr.open('GET', 'model/head.position.bin', true);
+  xhr.open('GET', 'model/pupin.position.bin', true);
   xhr.onload = function() {
     var buffer = new Float32Array(xhr.response);
     dataTexturePosition.image.data = buffer;
@@ -15118,7 +15118,7 @@ paper-ripple {
 
   var xhr2 = new XMLHttpRequest();
   xhr2.responseType = 'arraybuffer';
-  xhr2.open('GET', 'model/head.color.bin', true);
+  xhr2.open('GET', 'model/pupin.color.bin', true);
   xhr2.onload = function() {
     var buffer = new Float32Array(xhr2.response);
     dataTextureColor.image.data = buffer;
@@ -15251,6 +15251,12 @@ paper-ripple {
 
 			'	gl_FragColor = mix(vec4(starColor, 0.5 + randColor.b / 2.0), vec4(headColor, 1.0), fColor);',
 
+      ' if (vUv.x < 0.3) {',
+
+      '  gl_FragColor.xyz = starColor;',
+
+      ' }',
+
 			'}'
 
 		].join('\n'),
@@ -15316,11 +15322,19 @@ paper-ripple {
 
       ' vec3 field = getField(ftex, ftrans, finvTrans, oldPos, fgrid, fForceField);',
 
-      ' vec3 targetHead = (texture2D(tTargetHead, vUv).rgb * 10. - oldPos) * fForceHead;',
+      ' vec3 texHead = texture2D(tTargetHead, vUv).rgb * 1.7 + vec3(0.0, -2.8, 0.0);',
+      ' vec3 targetHead = (texHead - oldPos) * fForceHead;',
 
-      ' vec3 targetStars = (texture2D(tTargetStars, vUv).rgb * 40. - oldPos) * fForceStars;',
+      ' vec3 texStars = texture2D(tTargetStars, vUv).rgb * 40.0;',
+      ' vec3 targetStars = (texStars - oldPos) * fForceStars;',
 
 			'	gl_FragColor = vec4(oldPos + targetStars + targetHead + field, 1.0);',
+
+      ' if (vUv.x < 0.2) {',
+
+      '  gl_FragColor.xyz = texStars;',
+
+      ' }',
 
 			'}'
 
@@ -15436,12 +15450,23 @@ paper-ripple {
               new TWEEN.Tween(this).to({
                 forceHead: 40,
                 forceField: 0,
-                color: 80 }, 10000)
+                color: 10 }, 10000)
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
                 console.log('done 3');
-                this.animReady = true;
+
+                new TWEEN.Tween(this).to({
+                  color: 90 }, 10000)
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .onComplete(function () {
+
+                  console.log('done 4');
+                  this.animReady = true;
+
+                }.bind(this))
+                .start();
+
 
               }.bind(this))
               .start();
