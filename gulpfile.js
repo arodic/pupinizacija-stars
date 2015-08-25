@@ -194,7 +194,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
         }
       }
     },
-    https: true,
+    // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
       middleware: [ historyApiFallback() ],
