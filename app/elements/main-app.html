@@ -209,7 +209,7 @@
 
       ' float starSize = 3.0 * (10.0 / length(mvPosition.xyz));',
 
-      ' gl_PointSize = mix(starSize, 1.5, fColor) * (texture2D(tRandom, uv).r + 0.5) * pointSize;',
+      ' gl_PointSize = mix(starSize * (texture2D(tRandom, uv).r + 0.5) * pointSize, 1.0, fColor);',
       ' fFade = min(1.0, gl_PointSize);',
       ' gl_PointSize = max(gl_PointSize, 1.0);',
 
@@ -274,7 +274,7 @@
       fForceHead: { type: "f", value: 1 },
       fForceField: { type: "f", value: 1 },
       fForceCenter: { type: "f", value: 1 },
-      vCenter: { type: "v3", value: new THREE.Vector3(0.,0.,0.) },
+      vCenter: { type: "v3", value: new THREE.Vector3(0,0,0) },
 
     }, field.uniforms]),
 
@@ -490,9 +490,9 @@
 
     loop: function () {
 
-      setTimeout(function(){
+      // setTimeout(function(){
         requestAnimationFrame(this._loop);
-      }.bind(this), 1000 / 12); // temp
+      // }.bind(this), 1000 / 12); // temp
 
       TWEEN.update();
 
