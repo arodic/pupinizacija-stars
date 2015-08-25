@@ -100,6 +100,9 @@ gulp.task('copy', function () {
   var lib = gulp.src(['app/lib/**/*.js'])
     .pipe(gulp.dest('dist/lib'));
 
+  var post = gulp.src(['app/post/**/*.js'])
+    .pipe(gulp.dest('dist/post'));
+
   var elements = gulp.src(['app/elements/**/*.html'])
     .pipe(gulp.dest('dist/elements'));
 
