@@ -21,6 +21,7 @@ var path = require('path');
 var fs = require('fs');
 var glob = require('glob');
 var historyApiFallback = require('connect-history-api-fallback');
+var nodemon = require('gulp-nodemon');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -184,7 +185,7 @@ gulp.task('precache', function (callback) {
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 // Watch Files For Changes & Reload
-gulp.task('serve', ['styles', 'elements', 'images'], function () {
+gulp.task('serve', ['styles', 'elements', 'images', 'serial'], function () {
   browserSync({
     notify: false,
     logPrefix: 'PSK',
@@ -213,6 +214,12 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
   gulp.watch(['app/{scripts,elements}/**/*.js'], ['jshint']);
   gulp.watch(['app/images/**/*'], reload);
 });
+
+gulp.task('serial', function () {
+  nodemon({
+    script: 'serial.js'
+  })
+})
 
 // Build and serve the output from the dist build
 gulp.task('serve:dist', ['default'], function () {
