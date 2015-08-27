@@ -375,9 +375,9 @@
     ready: function () {
 
       this.appendChild(renderer.domElement);
-      renderer.setSize(window.innerWidth, window.innerHeight);
 
       var resizeApp = function() {
+        renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         composer.setSize(window.innerWidth, window.innerHeight);
