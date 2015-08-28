@@ -1,0 +1,41 @@
+[16:10:26] Using gulpfile ~/Desktop/stars/gulpfile.js
+[16:10:26] Starting 'styles'...
+[16:10:27] Starting 'elements'...
+[16:10:27] Starting 'images'...
+[16:10:27] Starting 'serial'...
+[16:10:27] Finished 'serial' after 1.69 ms
+[16:10:27] Finished 'elements' after 559 ms
+[16:10:27] [nodemon] v1.4.1
+[16:10:27] [nodemon] to restart at any time, enter `rs`
+[16:10:27] [nodemon] watching: *.*
+[16:10:27] [nodemon] starting `node serial.js`
+[16:10:28] styles all files 130 B
+[16:10:28] Finished 'styles' after 1.57 s
+events.js:85
+      throw er; // Unhandled 'error' event
+            ^
+Error: listen EADDRINUSE
+    at exports._errnoException (util.js:746:11)
+    at Server._listen2 (net.js:1156:14)
+    at listen (net.js:1182:10)
+    at net.js:1280:9
+    at dns.js:85:18
+    at process._tickCallback (node.js:355:11)
+    at Function.Module.runMain (module.js:503:11)
+    at startup (node.js:129:16)
+    at node.js:814:3
+[16:10:28] [nodemon] app crashed - waiting for file changes before starting...
+[16:10:28] images all files 3.73 MB
+[16:10:28] Finished 'images' after 1.2 s
+[16:10:28] Starting 'serve'...
+[16:10:28] Finished 'serve' after 90 ms
+[PSK] Access URLs:
+ --------------------------------------
+       Local: http://localhost:3002
+    External: http://192.168.0.101:3002
+ --------------------------------------
+          UI: http://localhost:3003
+ UI External: http://192.168.0.101:3003
+ --------------------------------------
+[PSK] Serving files from: .tmp
+[PSK] Serving files from: app
