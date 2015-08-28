@@ -185,7 +185,7 @@ gulp.task('precache', function (callback) {
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 // Watch Files For Changes & Reload
-gulp.task('serve', function () {
+gulp.task('serve', ['serial'], function () {
   browserSync({
     notify: false,
     logPrefix: 'PSK',
