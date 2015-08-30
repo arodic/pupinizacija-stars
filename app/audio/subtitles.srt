@@ -1,76 +1,59 @@
-﻿1
-00:00:00,000 --> 00:00:06,100
-inventions are the handwork of mortal man,
-though at first they appeal to us as something
+1
+00:00:00,000 --> 00:00:04,183
+Inventions are the handwork of mortal man.
 
 
 2
-00:00:04,010 --> 00:00:09,545
-normal, we ought to look at them
-as wonderful creations of human ingenuity.
+00:00:04,196 --> 00:00:12,931
+Though at first they appeal to us as something normal
+we ought to look at them as wonderful creations of human ingenuity.
 
 
 3
-00:00:13,900 --> 00:00:20,600
-their ultimate fate is to become more or
-less commonplace. The telegraph, and the
+00:00:13,198 --> 00:00:19,587
+Their ultimate fate is to become more or less commonplace.
 
 
 4
-00:00:20,800 --> 00:00:25,700
-telephone, the dynamo and the motor,
-the light of the electrical arc
+00:00:20,000 --> 00:00:27,000
+The telegraph, and telephone, dynamo and motor,
+the light of the electrical arc and of the incandescent filament,
 
 
 5
-00:00:26,200 --> 00:00:29,400
-and of the incandescent filament,
-had lost much of their awe - inspiring
+00:00:27,500 --> 00:00:32,394
+had lost much of their awe - inspiring character
+even at the time when I was a student at Cambridge.
 
 
 6
-00:00:31,000 --> 00:00:35,400
-character even at the time when I was
-a student at Cambridge. Inventions grow old
+00:00:33,000 --> 00:00:44,045
+Inventions age and are superseded by other inventions and
+being the creation of the constructive schemes of a mortal man, are themselves mortal.
 
 
 7
-00:00:26,478 --> 00:00:40,400
-and are superseded by other inventions, and,
-being the creation of the constructive schemes
+00:00:44,800 --> 00:00:53,000
+But the laws which the stars and the planets obey and have always obeyed
+in their paths through the heavens are unchangeable;
 
 
 8
-00:00:41,500 --> 00:00:48,200
-of mortal man, are themselves mortal. But
-the laws which the stars and the planets obey
+00:00:53,350 --> 00:01:01,286
+They never age, and therefore they are immortal;
+they are a part of the the eternal truth.
 
 
 9
-00:00:49,000 --> 00:00:53,600
-and have always obeyed in their paths
-through the heavens are unchangeable;
+00:01:02,000 --> 00:01:07,600
+We do not know of any natural processes by which eternal things have been evolved.
 
 
 10
-00:00:54,400 --> 00:00:59,600
-they never grow old, and therefore
-they are immortal; they are a part of the
+00:01:08,910 --> 00:01:14,000
+Their existence is the best philosophic proof that back of all this changeable visible world
 
 
 11
-00:01:50,000 --> 00:01:06,500
-the eternal truth. We do not know of any
-natural processes by which eternal things
-
-
-12
-00:01:07,600 --> 00:01:10,600
-have been evolved. Their existence is the
-best philosophic proof that back of all this
-
-
-13
-00:01:12,000 --> 00:01:18,700
-changeable visible world there is
-the unchangeable, the eternal divinity.
+00:01:14,500 --> 00:01:18,704
+there is the unchangeable, the eternal divinity.

@@ -235,7 +235,7 @@ gulp.task('serve:dist', ['default'], function () {
         }
       }
     },
-    https: true,
+    // https: true,
     server: 'dist',
     middleware: [ historyApiFallback() ]
   });

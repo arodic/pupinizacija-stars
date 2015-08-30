@@ -49,7 +49,7 @@
       <div>color</div>
       <paper-slider value="{{color}}" editable min="0" max="100"></paper-slider>
     </div>
-    <div id="subtitle">{{currentTitle}}</div>
+    <div id="subtitle"></div>
   </template>
 </dom-module>
 <script>
@@ -370,9 +370,6 @@
       },
       color: {
         value: 0
-      },
-      currentTitle: {
-        value: ''
       }
     },
     ready: function () {
@@ -385,6 +382,8 @@
         camera.updateProjectionMatrix();
         composer.setSize(window.innerWidth, window.innerHeight);
       };
+
+      resizeApp();
 
       window.addEventListener('resize', resizeApp);
 
@@ -411,7 +410,7 @@
       .onComplete(function () {
         setTimeout(function () {
           this.animReady = true;
-          console.log('ready');
+          // console.log('ready');
           this.animGo();
         }.bind(this), 1000);
       }.bind(this))
@@ -430,7 +429,7 @@
       .easing(TWEEN.Easing.Quadratic.InOut)
       .onComplete(function () {
 
-        console.log('Play audio');
+        // console.log('Play audio');
         this.$.audio.currentTime = 0;
         this.$.audio.play();
 
@@ -442,7 +441,7 @@
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onComplete(function () {
 
-          console.log('done 0');
+          // console.log('done 0');
 
           new TWEEN.Tween(this).to({
             forceStars: 0,
@@ -452,7 +451,7 @@
           .easing(TWEEN.Easing.Quadratic.InOut)
           .onComplete(function () {
 
-            console.log('done 1');
+            // console.log('done 1');
 
             new TWEEN.Tween(this).to({
               forceStars: 0,
@@ -462,7 +461,7 @@
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete(function () {
 
-              console.log('done 2');
+              // console.log('done 2');
 
               new TWEEN.Tween(this).to({
                 forceHead: 40,
@@ -471,14 +470,14 @@
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
-                console.log('done 3');
+                // console.log('done 3');
 
                 new TWEEN.Tween(this).to({
                   color: 90 }, 10000)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onComplete(function () {
 
-                  console.log('done 4');
+                  // console.log('done 4');
                   this.animReady = true;
                   this.animReset();
 
@@ -511,25 +510,25 @@
 
       if (!socket && window.location.href.search('localhost') !== -1) {
         socket = new WebSocket('ws://localhost:7000');
-        socket.onopen = function(msg) {
-          console.log('WebSocket connected.')
-        }
+        socket.onopen = function() {
+          console.log('WebSocket connected.');
+        };
         socket.onmessage = function(msg) {
           // console.log(msg);
           camera.position.z = Number(msg.data) / 16 + 22;
-        }
+        };
         socket.onclose = function() {
           socket = null;
-        }
+        };
       }
 
       TWEEN.update();
 
-      this.currentTitle = '';
+      this.$.subtitle.innerHTML = '';
       for (var i = 0; i < subtitleData.length; i++) {
         if (this.$.audio.currentTime > subtitleData[i].startTime / 1000 &&
             this.$.audio.currentTime < subtitleData[i].endTime / 1000) {
-              this.currentTitle = subtitleData[i].text;
+              this.$.subtitle.innerText = subtitleData[i].text;
             }
       }
 
