@@ -16,6 +16,7 @@
     }
     :host > #controls {
       position: absolute;
+      top: 200px;
     }
     :host paper-button {
       background: gray;
@@ -36,7 +37,6 @@
     <div id="controls">
       <template is="dom-if" if="{{animReady}}">
         <paper-button on-tap="animReset">Reset</paper-button>
-        <paper-button on-tap="animGo">Go</paper-button>
       </template>
       <div>stars</div>
       <paper-slider value="{{forceStars}}" editable min="0" max="100"></paper-slider>
@@ -397,6 +397,7 @@
 
       this.animReset();
 
+
     },
     animReset: function () {
       this.animReady = false;
@@ -411,6 +412,7 @@
         setTimeout(function () {
           this.animReady = true;
           console.log('ready');
+          this.animGo();
         }.bind(this), 1000);
       }.bind(this))
       .start();
@@ -478,6 +480,7 @@
 
                   console.log('done 4');
                   this.animReady = true;
+                  this.animReset();
 
                 }.bind(this))
                 .start();
