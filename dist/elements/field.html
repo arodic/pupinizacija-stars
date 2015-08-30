@@ -75,9 +75,9 @@
   };
 
   field.update = function() {
-    this.transform.rotation.x += 0.004;
-    this.transform.rotation.y += 0.006;
-    this.transform.rotation.z -= 0.008;
+    this.transform.rotation.x += 0.001;
+    this.transform.rotation.y += 0.002;
+    this.transform.rotation.z -= 0.003;
     this.transform.updateMatrixWorld();
     this.uniforms.ftrans.value = this.transform.matrixWorld;
     this.uniforms.finvTrans.value = new THREE.Matrix4().getInverse(this.transform.matrixWorld.clone());

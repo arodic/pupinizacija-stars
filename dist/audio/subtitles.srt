@@ -28,8 +28,8 @@ even at the time when I was a student at Cambridge.
 
 6
 00:00:33,000 --> 00:00:44,045
-Inventions age and are superseded by other inventions and
-being the creation of the constructive schemes of a mortal man, are themselves mortal.
+Inventions age and are superseded by other inventions and being the creation
+of the constructive schemes of a mortal man, are themselves mortal.
 
 
 7
@@ -51,7 +51,8 @@ We do not know of any natural processes by which eternal things have been evolve
 
 10
 00:01:08,910 --> 00:01:14,000
-Their existence is the best philosophic proof that back of all this changeable visible world
+Their existence is the best philosophic proof that back of
+all this changeable visible world
 
 
 11

@@ -16,7 +16,7 @@
     }
     :host > #controls {
       position: absolute;
-      top: 200px;
+      display: none;
     }
     :host paper-button {
       background: gray;
@@ -36,7 +36,7 @@
     <audio src="../audio/Pupin12.wav" preload="auto" id="audio"></audio>
     <div id="controls">
       <template is="dom-if" if="{{animReady}}">
-        <paper-button on-tap="animReset">Reset</paper-button>
+        <paper-button on-tap="animGo">Reset</paper-button>
       </template>
       <div>stars</div>
       <paper-slider value="{{forceStars}}" editable min="0" max="100"></paper-slider>
@@ -46,8 +46,6 @@
       <paper-slider value="{{forceField}}" editable min="0" max="100"></paper-slider>
       <div>center</div>
       <paper-slider value="{{forceCenter}}" editable min="0" max="100"></paper-slider>
-      <div>color</div>
-      <paper-slider value="{{color}}" editable min="0" max="100"></paper-slider>
     </div>
     <div id="subtitle"></div>
   </template>
@@ -55,7 +53,7 @@
 <script>
 (function () {
 
-  var renderer = new THREE.WebGLRenderer({antialias: true});
+  var renderer = new THREE.WebGLRenderer({antialias: false});
   renderer.autoClear = false;
 
   var scene = new THREE.Scene();
@@ -187,8 +185,7 @@
       tPositions: { type: "t", value: dataTexturePosition },
       tColors: { type: "t", value: dataTextureColor },
       tRandom: { type: "t", value: dataTextureRandom },
-      fColor: { type: "f", value: 0 },
-      pointSize: { type: "f", value: 2 }
+      pointSize: { type: "f", value: 6 }
     },
 
     vertexShader: [
@@ -196,26 +193,27 @@
 			'uniform sampler2D tPositions;',
 			'uniform sampler2D tRandom;',
 			'uniform float pointSize;',
-			'uniform float fColor;',
 
 			'varying vec2 vUv;',
-			'varying float fFade;',
+			'varying float fSize;',
+			'varying float fColor;',
 
 			'void main() {',
 
       ' vUv = uv;',
 
-      ' vec3 texPosition = texture2D(tPositions, uv).rgb;',
+      ' vec4 texPosition = texture2D(tPositions, uv);',
 
-      ' vec4 mvPosition = modelViewMatrix * vec4(texPosition, 1.0);',
+      ' vec4 mvPosition = modelViewMatrix * vec4(texPosition.xyz, 1.0);',
+      ' fColor = texPosition.w;',
 
       ' gl_Position = projectionMatrix * mvPosition;',
 
-      ' float starSize = 3.0 * (10.0 / length(mvPosition.xyz));',
+      ' fSize = (10.0 / length(mvPosition.xyz)) * pointSize;',
+      ' fSize *= (texture2D(tRandom, uv).r + 0.5);',
+      ' fSize = mix(1.0, fSize, min(1.0, fColor + 0.75));',
 
-      ' gl_PointSize = mix(starSize * (texture2D(tRandom, uv).r + 0.5) * pointSize, 1.0, fColor);',
-      ' fFade = min(1.0, gl_PointSize);',
-      ' gl_PointSize = max(gl_PointSize, 1.0);',
+      ' gl_PointSize = max(fSize, 1.0);',
 
 			'}'
 
@@ -225,40 +223,35 @@
 
 			'uniform sampler2D tColors;',
 			'uniform sampler2D tRandom;',
-			'uniform float fColor;',
-
 			'varying vec2 vUv;',
-			'varying float fFade;',
+			'varying float fSize;',
+			'varying float fColor;',
 
 			'void main() {',
 
-      ' vec3 headColor = texture2D(tColors, vUv).rgb;',
       ' vec3 randColor = texture2D(tRandom, vUv).rgb;',
-      ' vec3 starColor = vec3(0.8) + (randColor * 0.4);',
+      ' vec3 starColor = vec3(0.6) + randColor * 0.5;',
+      ' vec3 headColor = (texture2D(tColors, vUv).rgb + starColor) / 2.0;',
 
-			'	gl_FragColor = mix(vec4(starColor, 0.8 + randColor.b * 0.2), vec4(headColor, 1.0), fColor);',
-
-      ' vec2 pos = gl_PointCoord.xy - vec2(0.5);',
-      ' if (fFade == 1.0 && length(pos) > 0.5) {',
-      '   gl_FragColor.a = 0.0;',
+      'gl_FragColor = vec4(1.0);',
+      // 'gl_FragColor.rgb = starColor;',
+      ' if (vUv.x < 0.6) {',
+      '   gl_FragColor.rgb = starColor;',
+      ' } else {',
+      '   gl_FragColor.rgb = mix(headColor, starColor, min(fColor + 0.5, 1.0));',
       ' }',
 
-      ' gl_FragColor.a *= fFade;',
-
-      ' if (vUv.x < 0.3) {',
-
-      '  gl_FragColor.xyz = starColor;',
-
+      ' if (fSize > 2.0) {',
+      '   if(length(gl_PointCoord.xy - vec2(0.5)) > 0.5) {',
+      '     gl_FragColor.a = 0.0;',
+      '   }',
+      ' } else {',
+      '   gl_FragColor.a = min(fSize / 5.0, 1.0);',
       ' }',
-
 			'}'
 
 		].join('\n'),
-
     transparent: true
-    // blending: THREE.AdditiveBlending,
-    // depthTest: false
-
   });
 
   var particleMesh = new THREE.PointCloud(particleGeometry, particleMaterial);
@@ -321,28 +314,26 @@
       ' vec3 field = getField(ftex, ftrans, finvTrans, oldPos, fgrid, 1.0);',
 
       ' vec3 texHead = texture2D(tTargetHead, vUv).rgb * 1.7 + vec3(0.0, -2.8, 0.0);',
-      ' vec3 targetHead = (texHead - oldPos) * fForceHead;',
+      ' vec3 targetHead = (texHead - oldPos) * (texHead.y + 5.0) / 3.0 * fForceHead;',
 
       ' vec3 texStars = texture2D(tTargetStars, vUv).rgb * 40.0;',
       ' vec3 targetStars = (texStars - oldPos) * fForceStars;',
 
-      ' vec3 centerDist = vCenter - oldPos;',
-      ' vec3 targetCenter = centerDist / (max(length(centerDist), 0.0001) * 10.0);',
+      ' float centerDist = length(vCenter - oldPos);',
+      ' centerDist = max(centerDist, (10. - centerDist) / 1.);',
+      ' vec3 targetCenter = (vCenter - oldPos) / (max(centerDist, 0.001) * 10.0);',
       ' targetCenter += field * 0.01 * fForceCenter;',
       ' targetCenter *= fForceCenter;',
 
-			'	gl_FragColor = vec4(oldPos + targetStars + targetHead + field * fForceField + targetCenter, 1.0);',
+      ' vec3 outpos = oldPos + targetStars + targetHead + field * fForceField + targetCenter;',
+			'	gl_FragColor = vec4(outpos, 20. * length(outpos - texHead));',
 
-      ' if (vUv.x < 0.2) {',
-
-      '  gl_FragColor.xyz = texStars;',
-
+      ' if (vUv.x < 0.3) {',
+        'outpos = oldPos + (texStars - oldPos) * 0.001 + field * fForceField * 0.15;',
+      '  gl_FragColor = vec4(outpos, 1.0);',
       ' }',
-
 			'}'
-
 		].join('\n')
-
   });
 
   var fbo = new THREE.FBOUtils(512, renderer, simulationShader);
@@ -367,10 +358,10 @@
       },
       forceCenter: {
         value: 0,
-      },
-      color: {
-        value: 0
       }
+    },
+    listeners: {
+      'click': 'animGo'
     },
     ready: function () {
 
@@ -394,27 +385,7 @@
       this._loop = this.loop.bind(this);
       this._loop();
 
-      this.animReset();
-
-
-    },
-    animReset: function () {
-      this.animReady = false;
-      this.$.audio.pause();
-      new TWEEN.Tween(this).to({
-        forceStars: 100,
-        forceHead: 0,
-        forceField: 10,
-        color: 0 }, 5000)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .onComplete(function () {
-        setTimeout(function () {
-          this.animReady = true;
-          // console.log('ready');
-          this.animGo();
-        }.bind(this), 1000);
-      }.bind(this))
-      .start();
+      this.animReady = true;
     },
     animGo: function () {
       if (!this.animReady) {
@@ -422,22 +393,25 @@
       }
       this.animReady = false;
       new TWEEN.Tween(this).to({
-        forceStars: 12,
+        forceStars: 10000,
         forceHead: 0,
-        forceField: 10,
-        color: 0 }, 5000)
+        forceField: 5,
+        forceCenter: 0}, 2000)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .onComplete(function () {
 
-        // console.log('Play audio');
-        this.$.audio.currentTime = 0;
-        this.$.audio.play();
+        // console.log('Ready');
+
+        setTimeout(function() {
+          this.$.audio.currentTime = 0;
+          this.$.audio.play();
+        }.bind(this), 3000);
 
         new TWEEN.Tween(this).to({
-          forceStars: 5,
-          forceHead: 3,
-          forceField: 25,
-          color: 0 }, 38000)
+          forceStars: 0,
+          forceHead: 0,
+          forceField: 30,
+          forceCenter: 10}, 27000)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onComplete(function () {
 
@@ -445,9 +419,9 @@
 
           new TWEEN.Tween(this).to({
             forceStars: 0,
-            forceHead: 5,
-            forceField: 35,
-            color: 2 }, 27000)
+            forceHead: 2,
+            forceField: 40,
+            forceCenter: 50}, 25000)
           .easing(TWEEN.Easing.Quadratic.InOut)
           .onComplete(function () {
 
@@ -455,35 +429,38 @@
 
             new TWEEN.Tween(this).to({
               forceStars: 0,
-              forceHead: 20,
-              forceField: 60,
-              color: 4 }, 2000)
+              forceHead: 5,
+              forceField: 80,
+              forceCenter: 40}, 13000)
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete(function () {
 
               // console.log('done 2');
 
               new TWEEN.Tween(this).to({
-                forceHead: 40,
+                forceStars: 0,
+                forceHead: 80,
                 forceField: 0,
-                color: 10 }, 10000)
+                forceCenter: 0}, 14000)
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
                 // console.log('done 3');
 
                 new TWEEN.Tween(this).to({
-                  color: 90 }, 10000)
+                  forceStars: 0,
+                  forceHead: 0,
+                  forceField: 50,
+                  forceCenter: 100}, 23000)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onComplete(function () {
 
-                  // console.log('done 4');
-                  this.animReady = true;
-                  this.animReset();
+                    this.animReady = true;
+                    // console.log('ready');
+                    // this.animGo();
 
                 }.bind(this))
                 .start();
-
 
               }.bind(this))
               .start();
@@ -504,9 +481,9 @@
 
     loop: function () {
 
-      // setTimeout(function(){
+      setTimeout(function(){
         requestAnimationFrame(this._loop);
-      // }.bind(this), 1000 / 12); // temp
+      }.bind(this), 1000 / 30);
 
       if (!socket && window.location.href.search('localhost') !== -1) {
         socket = new WebSocket('ws://localhost:7000');
@@ -523,6 +500,8 @@
       }
 
       TWEEN.update();
+
+      renderer.clear();
 
       this.$.subtitle.innerHTML = '';
       for (var i = 0; i < subtitleData.length; i++) {
@@ -553,10 +532,10 @@
       simulationShader.uniforms.vCenter.value.x = Math.cos(time / 30000) * 1;
 
       fbo.swap();
+      renderer.clearTarget(fbo.out);
       fbo.simulate();
 
       particleMaterial.uniforms.tPositions.value = fbo.out;
-      particleMaterial.uniforms.fColor.value = this.color / 100;
 
       // renderer.render(scene, camera);
       composer.render( 0.1 );
