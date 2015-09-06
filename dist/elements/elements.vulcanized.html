@@ -12868,13 +12868,13 @@ paper-ripple {
         value: 0,
       },
       forceHead: {
-        value: 100,
+        value: 0,
       },
       forceField: {
         value: 0,
       },
       forceCenter: {
-        value: 0,
+        value: 100,
       }
     },
     listeners: {
@@ -12917,7 +12917,7 @@ paper-ripple {
       .easing(TWEEN.Easing.Quadratic.InOut)
       .onComplete(function () {
 
-        // console.log('Ready');
+        console.log('Ready');
 
         setTimeout(function() {
           this.$.audio.currentTime = 0;
@@ -12932,7 +12932,7 @@ paper-ripple {
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onComplete(function () {
 
-          // console.log('done 0');
+          console.log('done 0');
 
           new TWEEN.Tween(this).to({
             forceStars: 0,
@@ -12942,27 +12942,27 @@ paper-ripple {
           .easing(TWEEN.Easing.Quadratic.InOut)
           .onComplete(function () {
 
-            // console.log('done 1');
+            console.log('done 1');
 
             new TWEEN.Tween(this).to({
               forceStars: 0,
               forceHead: 5,
-              forceField: 80,
-              forceCenter: 40}, 13000)
+              forceField: 50,
+              forceCenter: 50}, 16000)
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete(function () {
 
-              // console.log('done 2');
+              console.log('done 2');
 
               new TWEEN.Tween(this).to({
                 forceStars: 0,
                 forceHead: 80,
                 forceField: 0,
-                forceCenter: 0}, 14000)
+                forceCenter: 0}, 6000)
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
-                // console.log('done 3');
+                console.log('done 3');
 
                 new TWEEN.Tween(this).to({
                   forceStars: 0,
@@ -12973,7 +12973,7 @@ paper-ripple {
                 .onComplete(function () {
 
                     this.animReady = true;
-                    // console.log('ready');
+                    console.log('ready');
                     // this.animGo();
 
                 }.bind(this))
@@ -13008,7 +13008,7 @@ paper-ripple {
           console.log('WebSocket connected.');
         };
         socket.onmessage = function(msg) {
-          // console.log(msg);
+          console.log(msg);
           camera.position.z = Number(msg.data) / 16 + 22;
         };
         socket.onclose = function() {
