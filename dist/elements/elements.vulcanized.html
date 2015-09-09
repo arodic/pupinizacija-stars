@@ -12550,7 +12550,7 @@ paper-ripple {
     }
   </style>
   <template>
-    <audio src="../audio/Pupin12.wav" preload="auto" id="audio"></audio>
+    <audio src="../audio/Pupin12.mp3" preload="auto" id="audio"></audio>
     <div id="controls">
       <template is="dom-if" if="{{animReady}}">
         <paper-button on-tap="animGo">Reset</paper-button>
@@ -12918,6 +12918,11 @@ paper-ripple {
       if (!this.animReady) {
         return;
       }
+
+      this.$.audio.play();
+      this.$.audio.currentTime = 0;
+      this.$.audio.pause();
+
       this.animReady = false;
       new TWEEN.Tween(this).to({
         forceStars: 10000,
@@ -12968,7 +12973,7 @@ paper-ripple {
                 forceStars: 0,
                 forceHead: 80,
                 forceField: 0,
-                forceCenter: 0}, 15000)
+                forceCenter: 0}, 14500)
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
