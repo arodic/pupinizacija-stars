@@ -185,6 +185,8 @@
       tPositions: { type: "t", value: dataTexturePosition },
       tColors: { type: "t", value: dataTextureColor },
       tRandom: { type: "t", value: dataTextureRandom },
+      fWidth: { type: "f", value: window.innerWidth },
+      fHeight: { type: "f", value: window.innerHeight },
       pointSize: { type: "f", value: 6 }
     },
 
@@ -223,6 +225,8 @@
 
 			'uniform sampler2D tColors;',
 			'uniform sampler2D tRandom;',
+			'uniform float fWidth;',
+			'uniform float fHeight;',
 			'varying vec2 vUv;',
 			'varying float fSize;',
 			'varying float fColor;',
@@ -230,11 +234,10 @@
 			'void main() {',
 
       ' vec3 randColor = texture2D(tRandom, vUv).rgb;',
-      ' vec3 starColor = vec3(0.6) + randColor * 0.5;',
+      ' vec3 starColor = vec3(0.45, 0.6, 0.7) + randColor * 0.4;',
       ' vec3 headColor = (texture2D(tColors, vUv).rgb + starColor) / 2.0;',
 
       'gl_FragColor = vec4(1.0);',
-      // 'gl_FragColor.rgb = starColor;',
       ' if (vUv.x < 0.6) {',
       '   gl_FragColor.rgb = starColor;',
       ' } else {',
@@ -248,6 +251,10 @@
       ' } else {',
       '   gl_FragColor.a = min(fSize / 5.0, 1.0);',
       ' }',
+
+      'gl_FragColor.rgb *= min(min(gl_FragCoord.x / fWidth, 1.0 - gl_FragCoord.x / fWidth) * 5.0, 1.0);',
+      'gl_FragColor.rgb *= min(min(gl_FragCoord.y / fHeight, 1.0 - gl_FragCoord.y / fHeight) * 5.0, 1.0);',
+
 			'}'
 
 		].join('\n'),
@@ -361,7 +368,8 @@
       }
     },
     listeners: {
-      'click': 'animGo'
+      'click': 'animGo',
+      'keyup': 'animGo'
     },
     ready: function () {
 
@@ -372,6 +380,8 @@
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         composer.setSize(window.innerWidth, window.innerHeight);
+        particleMaterial.uniforms.fHeight.value = window.innerHeight;
+        particleMaterial.uniforms.fWidth.value = window.innerWidth;
       };
 
       resizeApp();
@@ -431,7 +441,7 @@
               forceStars: 0,
               forceHead: 5,
               forceField: 50,
-              forceCenter: 50}, 16000)
+              forceCenter: 50}, 14000)
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete(function () {
 
@@ -441,7 +451,7 @@
                 forceStars: 0,
                 forceHead: 80,
                 forceField: 0,
-                forceCenter: 0}, 6000)
+                forceCenter: 0}, 15000)
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
@@ -450,17 +460,31 @@
                 new TWEEN.Tween(this).to({
                   forceStars: 0,
                   forceHead: 0,
-                  forceField: 50,
-                  forceCenter: 100}, 23000)
+                  forceField: 100,
+                  forceCenter: 50}, 2000)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onComplete(function () {
 
-                    this.animReady = true;
-                    console.log('ready');
-                    // this.animGo();
+                    console.log('done 4');
+
+                    new TWEEN.Tween(this).to({
+                      forceStars: 0,
+                      forceHead: 0,
+                      forceField: 50,
+                      forceCenter: 100}, 23000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .onComplete(function () {
+
+                        this.animReady = true;
+                        console.log('ready');
+                        // this.animGo();
+
+                    }.bind(this))
+                    .start();
 
                 }.bind(this))
                 .start();
+
 
               }.bind(this))
               .start();
