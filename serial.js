@@ -5,7 +5,7 @@ var client_ws, data, value;
 
 var SerialPort = require("serialport").SerialPort
 var serialPort = new SerialPort("/dev/tty.usbserial-AI02NIF1", {
-  baudrate: 9600
+  baudrate: 256000
 });
 
 serialPort.on("open", function () {
