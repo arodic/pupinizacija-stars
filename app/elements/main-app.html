@@ -562,7 +562,7 @@
         socket.onmessage = function(msg) {
           var newpos = Number(msg.data) / 6 + 10;
           this.rateOfChange = (this.rateOfChange * 3 + Math.abs(camera.position.z - newpos)) / 4;
-          if (this.rateOfChange > 2) {
+          if (this.rateOfChange > 0.2) {
             this.animGo();
           }
           camera.position.z = newpos;
