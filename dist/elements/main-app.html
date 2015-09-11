@@ -87,8 +87,15 @@
   var scene = new THREE.Scene();
 
   var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0.2, 25);
+  camera.position.set(0, 0.2, 32);
   camera.lookAt(new THREE.Vector3(0.0, 0.2, 0.0));
+
+  // var background = new THREE.Mesh(
+  //   new THREE.PlaneBufferGeometry(11.7,8.8,1,1),
+  //   new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('images/background.jpg')})
+  // );
+  // background.position.set(0, 0.2, 0);
+  // scene.add(background);
 
   var composer = new THREE.EffectComposer(renderer);
   composer.setSize(window.innerWidth, window.innerHeight);
@@ -393,6 +400,9 @@
       },
       forceCenter: {
         value: 100,
+      },
+      rateOfChange: {
+        value: 0
       }
     },
     listeners: {
@@ -538,6 +548,8 @@
 
     loop: function () {
 
+
+
       setTimeout(function(){
         requestAnimationFrame(this._loop);
       }.bind(this), 1000 / 30);
@@ -548,19 +560,25 @@
           console.log('WebSocket connected.');
         };
         socket.onmessage = function(msg) {
-          console.log(msg);
-          camera.position.z = Number(msg.data) / 16 + 22;
+          var newpos = Number(msg.data) / 6 + 10;
+          this.rateOfChange = (this.rateOfChange * 3 + Math.abs(camera.position.z - newpos)) / 4;
+          if (this.rateOfChange > 2) {
+            this.animGo();
+          }
+          camera.position.z = newpos;
         };
         socket.onclose = function() {
           socket = null;
         };
       }
 
+      window.camera = camera;
+
       TWEEN.update();
 
       renderer.clear();
 
-      // this.$.subtitle.innerHTML = '';
+      this.$.subtitle.innerHTML = '';
       for (var i = 0; i < subtitleData.length; i++) {
         if (this.$.audio.currentTime > subtitleData[i].startTime / 1000 &&
             this.$.audio.currentTime < subtitleData[i].endTime / 1000) {
