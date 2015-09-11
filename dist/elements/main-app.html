@@ -26,11 +26,36 @@
       bottom: 0;
       color: white;
       text-align: center;
-      width: 100%;
-      padding: 0.5em 2em;
+      width: calc(100% - 2em);
+      margin: 2em;
       font-size: 1.2rem;
       text-shadow: 0.05em 0.05em 0 black;
     }
+    @media (max-width: 750px) {
+      :host > #subtitle {
+        width: calc(100% - 1em);
+        margin: 1em;
+        font-size: 1rem;
+        text-shadow: 0.05em 0.05em 0 black;
+      }
+    }
+    @media (max-width: 600px) {
+      :host > #subtitle {
+        width: calc(100% - 0.5em);
+        margin: 0.5em;
+        font-size: 0.8rem;
+        text-shadow: 0.05em 0.05em 0 black;
+      }
+    }
+    @media (max-width: 470px) {
+      :host > #subtitle {
+        width: calc(100% - 0.5em);
+        margin: 0.5em;
+        font-size: 0.7rem;
+        text-shadow: 0.05em 0.05em 0 black;
+      }
+    }
+
   </style>
   <template>
     <audio src="../audio/Pupin12.mp3" preload="auto" id="audio"></audio>
@@ -47,7 +72,10 @@
       <div>center</div>
       <paper-slider value="{{forceCenter}}" editable min="0" max="100"></paper-slider>
     </div>
-    <div id="subtitle"></div>
+    <div id="subtitle">
+      Inventions age and are superseded by other inventions and being the creation<br />
+      of the constructive schemes of a mortal man, are themselves mortal.
+    </div>
   </template>
 </dom-module>
 <script>
@@ -532,7 +560,7 @@
 
       renderer.clear();
 
-      this.$.subtitle.innerHTML = '';
+      // this.$.subtitle.innerHTML = '';
       for (var i = 0; i < subtitleData.length; i++) {
         if (this.$.audio.currentTime > subtitleData[i].startTime / 1000 &&
             this.$.audio.currentTime < subtitleData[i].endTime / 1000) {
