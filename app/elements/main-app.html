@@ -90,12 +90,18 @@
   camera.position.set(0, 0.2, 32);
   camera.lookAt(new THREE.Vector3(0.0, 0.2, 0.0));
 
-  // var background = new THREE.Mesh(
-  //   new THREE.PlaneBufferGeometry(11.7,8.8,1,1),
-  //   new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('images/background.jpg')})
-  // );
-  // background.position.set(0, 0.2, 0);
-  // scene.add(background);
+  var background = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(15.4,11.5,1,1),
+    new THREE.MeshBasicMaterial({
+      map: THREE.ImageUtils.loadTexture('images/background.jpg'),
+      transparent: true,
+      opacity: 0.333,
+      depthWrite: false,
+      depthTest: false
+    })
+  );
+  background.position.set(0, 0.2, 0);
+  scene.add(background);
 
   var composer = new THREE.EffectComposer(renderer);
   composer.setSize(window.innerWidth, window.innerHeight);

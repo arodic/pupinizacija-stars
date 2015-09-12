@@ -90,12 +90,18 @@
   camera.position.set(0, 0.2, 32);
   camera.lookAt(new THREE.Vector3(0.0, 0.2, 0.0));
 
-  // var background = new THREE.Mesh(
-  //   new THREE.PlaneBufferGeometry(11.7,8.8,1,1),
-  //   new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('images/background.jpg')})
-  // );
-  // background.position.set(0, 0.2, 0);
-  // scene.add(background);
+  var background = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(15.4,11.5,1,1),
+    new THREE.MeshBasicMaterial({
+      map: THREE.ImageUtils.loadTexture('images/background.jpg'),
+      transparent: true,
+      opacity: 0.333,
+      depthWrite: false,
+      depthTest: false
+    })
+  );
+  background.position.set(0, 0.2, 0);
+  scene.add(background);
 
   var composer = new THREE.EffectComposer(renderer);
   composer.setSize(window.innerWidth, window.innerHeight);
@@ -400,9 +406,6 @@
       },
       forceCenter: {
         value: 100,
-      },
-      rateOfChange: {
-        value: 0
       }
     },
     listeners: {
@@ -453,7 +456,7 @@
       .easing(TWEEN.Easing.Quadratic.InOut)
       .onComplete(function () {
 
-        console.log('Ready');
+        // console.log('Ready');
 
         setTimeout(function() {
           this.$.audio.currentTime = 0;
@@ -468,7 +471,7 @@
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onComplete(function () {
 
-          console.log('done 0');
+          // console.log('done 0');
 
           new TWEEN.Tween(this).to({
             forceStars: 0,
@@ -478,7 +481,7 @@
           .easing(TWEEN.Easing.Quadratic.InOut)
           .onComplete(function () {
 
-            console.log('done 1');
+            // console.log('done 1');
 
             new TWEEN.Tween(this).to({
               forceStars: 0,
@@ -488,7 +491,7 @@
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete(function () {
 
-              console.log('done 2');
+              // console.log('done 2');
 
               new TWEEN.Tween(this).to({
                 forceStars: 0,
@@ -498,7 +501,7 @@
               .easing(TWEEN.Easing.Quadratic.InOut)
               .onComplete(function () {
 
-                console.log('done 3');
+                // console.log('done 3');
 
                 new TWEEN.Tween(this).to({
                   forceStars: 0,
@@ -508,7 +511,7 @@
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onComplete(function () {
 
-                    console.log('done 4');
+                    // console.log('done 4');
 
                     new TWEEN.Tween(this).to({
                       forceStars: 0,
@@ -519,7 +522,7 @@
                     .onComplete(function () {
 
                         this.animReady = true;
-                        console.log('ready');
+                        // console.log('ready');
                         // this.animGo();
 
                     }.bind(this))
@@ -548,8 +551,6 @@
 
     loop: function () {
 
-
-
       setTimeout(function(){
         requestAnimationFrame(this._loop);
       }.bind(this), 1000 / 30);
@@ -557,15 +558,14 @@
       if (!socket && window.location.href.search('localhost') !== -1) {
         socket = new WebSocket('ws://localhost:7000');
         socket.onopen = function() {
-          console.log('WebSocket connected.');
+          // console.log('WebSocket connected.');
         };
         socket.onmessage = function(msg) {
           var newpos = Number(msg.data) / 6 + 10;
-          this.rateOfChange = (this.rateOfChange * 3 + Math.abs(camera.position.z - newpos)) / 4;
-          if (this.rateOfChange > 2) {
+          camera.position.z = newpos;
+          if (msg.data > 132) {
             this.animGo();
           }
-          camera.position.z = newpos;
         };
         socket.onclose = function() {
           socket = null;
