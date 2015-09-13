@@ -567,7 +567,7 @@
           var newpos = Number(msg.data) / 6 + 10;
           camera.position.z = newpos;
           this.msgCount += 1;
-          if (this.msgCount > 100) {
+          if (this.msgCount > 60) {
             this.animGo();
             this.msgCount = 0;
           }
