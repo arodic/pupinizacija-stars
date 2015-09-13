@@ -391,6 +391,7 @@
   /////
 
   var socket;
+  var msgCount = 0;
 
   Polymer({
     is: 'main-app',
@@ -406,9 +407,6 @@
       },
       forceCenter: {
         value: 100,
-      },
-      msgCount: {
-        value: 0,
       }
     },
     listeners: {
@@ -525,6 +523,7 @@
                     .onComplete(function () {
 
                         this.animReady = true;
+                        msgCount = 0;
                         // console.log('ready');
                         // this.animGo();
 
@@ -566,12 +565,14 @@
         socket.onmessage = function(msg) {
           var newpos = Number(msg.data) / 6 + 10;
           camera.position.z = newpos;
-          this.msgCount += 1;
-          if (this.msgCount > 60) {
+          msgCount += 1;
+          //console.log(msgCount, msg.data);
+          if (msgCount > 60) {
+            //console.log('GO');
             this.animGo();
-            this.msgCount = 0;
+            msgCount = 0;
           }
-        };
+        }.bind(this);
         socket.onclose = function() {
           socket = null;
         };
