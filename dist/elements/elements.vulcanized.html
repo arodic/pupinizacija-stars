@@ -12923,6 +12923,9 @@ paper-ripple {
       },
       forceCenter: {
         value: 100,
+      },
+      msgCount: {
+        value: 0,
       }
     },
     listeners: {
@@ -13080,8 +13083,10 @@ paper-ripple {
         socket.onmessage = function(msg) {
           var newpos = Number(msg.data) / 6 + 10;
           camera.position.z = newpos;
-          if (msg.data > 132) {
+          this.msgCount += 1;
+          if (this.msgCount > 100) {
             this.animGo();
+            this.msgCount = 0;
           }
         };
         socket.onclose = function() {
