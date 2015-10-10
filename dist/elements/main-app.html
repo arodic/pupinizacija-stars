@@ -393,6 +393,7 @@
   var socket;
   var msgCount = 0;
   var playcount = 0;
+  var cameraTargetZ = 31.33;
 
   Polymer({
     is: 'main-app',
@@ -528,7 +529,7 @@
                         this.animReady = true;
                         msgCount = 0;
                         if (playcount > 20) {
-                          location.reload();
+                          // location.reload();
                         }
                         // console.log('ready');
                         // this.animGo();
@@ -566,11 +567,10 @@
       if (!socket && window.location.href.search('localhost') !== -1) {
         socket = new WebSocket('ws://localhost:7000');
         socket.onopen = function() {
-          // console.log('WebSocket connected.');
+          console.log('WebSocket connected.');
         };
         socket.onmessage = function(msg) {
-          var newpos = Number(msg.data) / 6 + 10;
-          camera.position.z = newpos;
+          cameraTargetZ = Number(msg.data) / 8 + 15;
           msgCount += 1;
           //console.log(msgCount, msg.data);
           if (msgCount > 400) {
@@ -585,6 +585,8 @@
       }
 
       window.camera = camera;
+
+      camera.position.z = (camera.position.z * 2 + cameraTargetZ) / 3;
 
       TWEEN.update();
 
