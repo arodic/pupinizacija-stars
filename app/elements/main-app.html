@@ -570,7 +570,7 @@
           console.log('WebSocket connected.');
         };
         socket.onmessage = function(msg) {
-          cameraTargetZ = Number(msg.data) / 8 + 15;
+          cameraTargetZ = Number(msg.data) / 16 + 15;
           msgCount += 1;
           //console.log(msgCount, msg.data);
           if (msgCount > 400) {
