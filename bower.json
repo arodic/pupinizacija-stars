@@ -14,11 +14,11 @@
     "tests"
   ],
   "dependencies": {
-    "three-renderer": "arodic/three-renderer#master",
+    "three-renderer": "arodic/three-renderer#~1.3.1",
     "paper-slider": "PolymerElements/paper-slider#~1.0.4",
     "paper-button": "PolymerElements/paper-button#~1.0.3"
   },
   "resolutions": {
-    "three-renderer": "master"
+    "three-js": "~1.3.1"
   }
 }

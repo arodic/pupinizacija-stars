@@ -90,10 +90,18 @@
   camera.position.set(0, 0.2, 32);
   camera.lookAt(new THREE.Vector3(0.0, 0.2, 0.0));
 
+  var bgimage = document.createElement( 'img' );
+  var bgtexture = new THREE.Texture();
+  bgimage.addEventListener( 'load', function () {
+    bgtexture.image = bgimage;
+    bgtexture.needsUpdate = true;
+});
+  bgimage.src = 'images/background.jpg';
+
   var background = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(15.4,11.5,1,1),
     new THREE.MeshBasicMaterial({
-      map: THREE.ImageUtils.loadTexture('images/background.jpg'),
+      map: bgtexture,
       transparent: true,
       opacity: 0.333,
       depthWrite: false,
